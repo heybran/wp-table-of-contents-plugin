@@ -5,6 +5,8 @@ namespace HM\TOC;
 use WP_HTML_Tag_Processor;
 
 $post_id = isset( $attributes['postId'] ) ? $attributes['postId'] : ( $block->context['postId'] ?? null );
+$show_heading = isset( $attributes['showHeading'] ) ? $attributes['showHeading'] : true;
+$heading = $attributes['heading'] ?? '';
 $post = get_post( $post_id );
 
 if ( ! $post ) {
@@ -40,6 +42,8 @@ printf(
 	$wrapper_attributes, // @codingStandardsIgnoreLine WordPress.Security.EscapeOutput.OutputNotEscaped
 );
 
-printf( '<h2>%s</h2>', esc_html__( 'Table of contents', 'hm-table-of-contents' ) );
+if ( $show_heading && $heading ) {
+	echo '<h2>' . esc_html( $heading ) . '</h2>';
+}
 the_heading_list( $hierarchy, $max_level, $current_level );
 echo '</div>';

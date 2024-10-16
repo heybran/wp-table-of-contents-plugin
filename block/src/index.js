@@ -2,7 +2,7 @@ import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import { registerBlockType } from '@wordpress/blocks';
 import ServerSideRender from '@wordpress/server-side-render';
 import metadata from './block.json';
-import { PanelBody, SelectControl } from '@wordpress/components';
+import { PanelBody, SelectControl, ToggleControl, TextControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 registerBlockType( metadata.name, {
@@ -12,6 +12,16 @@ registerBlockType( metadata.name, {
 			<div { ...blockProps }>
 				<InspectorControls>
 					<PanelBody>
+						<ToggleControl
+							label={ __( 'Show Heading', 'hm-table-of-contents' ) }
+							checked={ !!attributes.showHeading }
+							onChange={ (showHeading) => setAttributes({ showHeading }) }
+						/>
+						<TextControl
+							label={ __( 'Heading', 'hm-table-of-contents' ) }
+							value={ attributes.heading }
+							onChange={ (heading) => setAttributes({ heading }) }
+						/>
 						<SelectControl
 							label={ __( 'Maximum Header Depth', 'hm-table-of-contents' ) }
 							value={ attributes.maxLevel || 3 }

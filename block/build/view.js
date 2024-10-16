@@ -1,1 +1,45 @@
-document.querySelectorAll(".hm-toc, .hm-table-of-contents").forEach((e=>{const t=e.querySelectorAll("a"),n=[...[...t].map((e=>new URL(e.href).hash.substring(1))).map((e=>document.getElementById(e)))].reverse(),r=n.map((e=>e.getBoundingClientRect().top));let o=1/0;window.addEventListener("scroll",(()=>{requestAnimationFrame((()=>{const l=document.documentElement.scrollTop,a=window.innerHeight;let c=1/0;for(let e of r)if(e<=l+a/2){c=e;break}if(c===o)return;o=c;const i=n[r.indexOf(o)].getAttribute("id"),s=e.querySelector(`a[href="#${i}"]`);s&&(t.forEach((e=>e.parentElement.classList.remove("active"))),s.parentElement.classList.add("active"))}))}),{passive:!0})}));
+/******/ (() => { // webpackBootstrap
+/*!***************************!*\
+  !*** ./block/src/view.js ***!
+  \***************************/
+document.querySelectorAll('.hm-toc, .hm-table-of-contents').forEach(toc => {
+  const links = toc.querySelectorAll('a');
+  const ids = [...links].map(link => new URL(link.href).hash.substring(1));
+
+  // Cycle backwards through top offsets to get nearest segment.
+  const headings = [...ids.map(id => document.getElementById(id))].reverse();
+  const thresholds = headings.map(heading => heading.getBoundingClientRect().top);
+  let currentThreshold = Infinity;
+
+  // Highlight the heading section we are most 'in', regardless of scroll direction.
+  window.addEventListener('scroll', () => {
+    requestAnimationFrame(() => {
+      const scrollTop = document.documentElement.scrollTop;
+      const windowHeight = window.innerHeight;
+      let threshold = Infinity;
+      for (let newThreshold of thresholds) {
+        if (newThreshold <= scrollTop + windowHeight / 2) {
+          threshold = newThreshold;
+          break;
+        }
+      }
+      if (threshold === currentThreshold) {
+        return;
+      }
+      currentThreshold = threshold;
+      const heading = headings[thresholds.indexOf(currentThreshold)];
+      const headingId = heading.getAttribute('id');
+      const link = toc.querySelector(`a[href="#${headingId}"]`);
+      if (!link) {
+        return;
+      }
+      links.forEach(lnk => lnk.parentElement.classList.remove('active'));
+      link.parentElement.classList.add('active');
+    });
+  }, {
+    passive: true
+  });
+});
+/******/ })()
+;
+//# sourceMappingURL=view.js.map
